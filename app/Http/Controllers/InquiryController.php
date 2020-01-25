@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Mail;
 use App\Mail\ThankyouMail;
+use Illuminate\Support\Arr;
+
 
 class InquiryController extends Controller
 {
@@ -54,8 +56,9 @@ class InquiryController extends Controller
         }
 
         $content = $validated->getData();
+        $data = Arr::except($content, ['_token']);
 
-        // CustomerInformation::create($validated);
+        CustomerInformation::create($data);
         Mail::to(request()->mailaddress)->send(new ThankyouMail($content));
         return view('completeform');
     }
